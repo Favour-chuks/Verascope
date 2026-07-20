@@ -1,6 +1,6 @@
 import { createRequire } from "node:module";
-import { stageStaticAuditEvidence, buildStaticAuditDefinition, promptEvidence } from "../src/lib/agents/static-agents.ts";
-import { getManagedVercelSandboxClient } from "../src/lib/sandbox/managed-vercel-pool.ts";
+import { stageStaticAuditEvidence, buildStaticAuditDefinition, promptEvidence } from "../src/lib/agents/static-agents";
+import { getManagedVercelSandboxClient } from "../src/lib/sandbox/managed-vercel-pool";
 
 const require = createRequire(import.meta.url);
 const { loadEnvConfig } = require("@next/env");

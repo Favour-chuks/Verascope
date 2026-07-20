@@ -179,7 +179,7 @@ export function ScanView({ scanId }: { scanId: string }) {
         {scan.status === "failed" && (
           <>
             <p className="form-error">No report was produced. The log above contains the recorded stage outcome.</p>
-            <a href="/" className="primary-button" style={{ textDecoration: "none", marginTop: "32px", display: "flex", width: "25%", gap: "auto" }}>
+            <a href="/" className="back-button">
               <span>←</span>
               <span>Back</span>
             </a>

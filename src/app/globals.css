@@ -84,6 +84,10 @@ h3 { margin-bottom: 9px; font-family: "Iowan Old Style", Georgia, serif; font-si
 .primary-button:hover:not(:disabled) { background: #ccfa82; transform: translateY(-2px); }
 .primary-button:disabled { background: #c7c7bb; color: #7a8077; }
 .primary-button span:last-child { font-size: 22px; line-height: 1; }
+.back-button { display: flex; align-items: center; justify-content: space-between; width: 25%; min-height: 55px; margin-top: 32px; border: 0; padding: 0 18px; background: var(--moss); color: var(--ink); font-family: "Aptos Mono", Consolas, monospace; font-size: 12px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; transition: transform .18s, background .18s; }
+.back-button:hover:not(:disabled) { background: #ccfa82; transform: translateY(-2px); }
+.back-button:disabled { background: #c7c7bb; color: #7a8077; }
+.back-button span:first-child { font-size: 22px; line-height: 1; }
 .form-footer { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; }
 .form-note { margin: 0; }
 .form-error { margin: 18px 0 0; border-left: 4px solid var(--signal); padding: 12px 14px; background: var(--signal-pale); color: #6f2714; font-size: 13px; line-height: 1.45; }
