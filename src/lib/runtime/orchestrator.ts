@@ -5,6 +5,20 @@ import { runSandboxRuntimeBehavior } from "@/lib/runtime/sandbox-executor";
 import { resolveRuntimeTarget } from "@/lib/runtime/target-resolution";
 import type { ResolvedRuntimeTarget, RuntimeStageResult } from "@/lib/runtime/types";
 
+function extractErrorMessage(error: unknown): string {
+  const detail = error instanceof Error ? error.message : "runtime_stage_failed";
+  try {
+    const parsed = JSON.parse(detail);
+    if (parsed && typeof parsed === "object") {
+      if (parsed.error && typeof parsed.error.message === "string") return parsed.error.message;
+      if (typeof parsed.message === "string") return parsed.message;
+    }
+  } catch {
+    // Not JSON, fall through
+  }
+  return detail;
+}
+
 export type RuntimeExecutor = (target: Extract<ResolvedRuntimeTarget, { status: "ready" }>) => Promise<RuntimeStageResult>;
 export type RuntimeResolution = (target: Parameters<typeof resolveRuntimeTarget>[0], options: Parameters<typeof resolveRuntimeTarget>[1]) => Promise<ResolvedRuntimeTarget>;
 
@@ -84,7 +98,7 @@ export async function runRuntimeStage(scanId: string, options: { resolve?: Runti
       await target.close();
     }
   } catch (error) {
-    const detail = error instanceof Error ? error.message : "runtime_stage_failed";
+    const detail = extractErrorMessage(error);
     await store.updateScan(scanId, { status: "failed", currentStageDetail: detail, completedAt: new Date().toISOString() });
     await store.appendScanEvent(scanId, `Runtime stage failed: ${detail}`);
   }

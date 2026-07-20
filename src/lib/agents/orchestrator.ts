@@ -8,6 +8,20 @@ import {
 import { getGeminiAuditEnvironment } from "@/lib/config/env";
 import { runRuntimeStage } from "@/lib/runtime/orchestrator";
 
+function extractErrorMessage(error: unknown): string {
+  const detail = error instanceof Error ? error.message : "unknown_error";
+  try {
+    const parsed = JSON.parse(detail);
+    if (parsed && typeof parsed === "object") {
+      if (parsed.error && typeof parsed.error.message === "string") return parsed.error.message;
+      if (typeof parsed.message === "string") return parsed.message;
+    }
+  } catch {
+    // Not JSON, fall through
+  }
+  return detail;
+}
+
 /**
  * Quick demo is deliberately useful without a reasoning-model call. It runs
  * only the controlled runtime fixture and labels Agents 1–2 as not assessed;
@@ -60,7 +74,7 @@ export async function runStaticStages(scanId: string, options: { store?: ScanSto
     await store.appendScanEvent(scanId, "Static passes complete; entering runtime passes.");
     await runRuntimeStage(scanId, { store });
   } catch (error) {
-    const detail = error instanceof Error ? error.message : "unknown_error";
+    const detail = extractErrorMessage(error);
     await store.updateScan(scanId, { status: "failed", currentStageDetail: detail, completedAt: new Date().toISOString() });
     await store.appendScanEvent(scanId, `Static audit failed: ${detail}`);
   }

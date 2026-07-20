@@ -170,13 +170,21 @@ export function ScanView({ scanId }: { scanId: string }) {
     <main className="scan-shell">
       <div className="masthead compact"><a className="wordmark" href="/">VERASCOPE<span>●</span></a><p>{titleMode(scan.runtimeTarget.mode)} / in progress</p></div>
       <section className="running-panel">
-        <p className="eyebrow">Audit in progress</p>
+        <p className="eyebrow">{scan.status === "failed" ? "Audit failed" : "Audit in progress"}</p>
         <h1>{scan.status === "failed" ? "The audit stopped before a report could be assembled." : "Following the evidence trail."}</h1>
-        <p className="intro">{scan.currentStageDetail ?? "Preparing the audit."}</p>
+        {scan.status != "failed" ?<p className="intro">{scan.currentStageDetail ?? "Preparing the audit."}</p> : '' }
         <div className="status-line"><span className={scan.status === "failed" ? "status-dot failed" : "status-dot"}></span><span>{scan.status.replaceAll("_", " ")}</span></div>
-        <AuditStageRail status={scan.status} />
+        {scan.status !== "failed"? <AuditStageRail status={scan.status} /> : ''}
         <ol className="event-log" aria-live="polite">{scan.events.map((event) => <li key={event.id}><time>{new Date(event.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</time><span>{event.message}</span></li>)}</ol>
-        {scan.status === "failed" && <p className="form-error">No report was produced. The log above contains the recorded stage outcome.</p>}
+        {scan.status === "failed" && (
+          <>
+            <p className="form-error">No report was produced. The log above contains the recorded stage outcome.</p>
+            <a href="/" className="primary-button" style={{ textDecoration: "none", marginTop: "32px", display: "flex", width: "25%", gap: "auto" }}>
+              <span>←</span>
+              <span>Back</span>
+            </a>
+          </>
+        )}
       </section>
     </main>
   );
